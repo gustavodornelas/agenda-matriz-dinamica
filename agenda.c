@@ -19,12 +19,17 @@ char* cadastra_nome (){ //cadastrar nome na agenda
     return nome; //retornar a posição na memoria
 }
 
-long int cadastra_telefone (){
+char* cadastra_telefone (){
 
-    long int tel;
+    char tmp_tel[15]; //buffer
+    char *tel;
     
     printf ("Digite o telefone do contato: ");
-    scanf ("%li", &tel);
+    scanf ("  %s", tmp_tel); //lê um telefone
+
+    tel=malloc(sizeof(char) * strlen(tmp_tel)+1); //aloca memoria de acordo com o telefone
+
+    strcpy(tel, tmp_tel); //copia valor para ponteiro
 
     return tel;
 }
@@ -48,12 +53,31 @@ char* cadastra_email (){
     return email;
 }
 
-void listar_cadastros (char** nome,char** telefone,char** email, int c){
+int busca_cadastros(char** nome,char** telefone,char** email, int c){
+
+    char busca[100];
 
     system ("cls");
 
+    printf ("Digite o nome ou telefone do contato desejado: ");
+    scanf (" %s", busca);
+
     for (int i=0; i<c; i++){
-        printf ("Cadastro %d\nNome: %s\nTelefone: %li\nE-mail: %s\n\n", i+1, nome[i], telefone[i], email[i]); //imprimir o cadastro na posicao i
+
+        if (strcmp(busca, nome[i])==0 || strcmp(busca, telefone[i])==0){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void listar_cadastros (char** nome, char** telefone, char** email,int t, int c){
+
+    system ("cls");
+
+    for (int i=t; i<c; i++){
+        printf ("Cadastro %d\nNome: %s\nTelefone: %s\nE-mail: %s\n\n", i+1, nome[i], telefone[i], email[i]); //imprimir o cadastro na posicao i
     }
 
     system ("Pause");
@@ -69,18 +93,17 @@ void free_col (char** m, int tam){ //função para limpar memoria das matrizes
 
 int main (){
 
-    char** nome,** email;//matriz
-    long int* telefone; //vetor
+    char **nome, **email, **telefone;//matriz
     int op, tam=100, i=0, j; //variaveis de controle
 
     //alocação inicial
     nome=malloc(sizeof(char*)*tam);
-    telefone=malloc(sizeof(long int*)*tam);
+    telefone=malloc(sizeof(char*)*tam);
     email=malloc(sizeof(char*)*tam);
 
     do{ //menu
         system ("cls");
-        printf ("(Espacos livre na agenda: %d, Espacos usado na agenda: %d)\n\nMENU\n1) Cadastra Contato\n2) Listar Contatos\n3) Editar Contatos\n4) Dobrar espaco da agenda\n0) Sair\nOpcao: ",tam, i);
+        printf ("(Espacos livre na agenda: %d, Espacos usado na agenda: %d)\n\nMENU\n1) Cadastra Contato\n2) Listar Contatos\n3) Buscar Contato\n4) Editar Contatos\n5) Dobrar espaco da agenda\n0) Sair\nOpcao: ",tam, i);
         scanf ("%d", &op);
 
         switch (op){
@@ -97,15 +120,25 @@ int main (){
             break;
 
             case 2:
-                listar_cadastros(nome, telefone, email, i);
+                listar_cadastros(nome, telefone, email, 0, i);
                 break;
 
             case 3:
-                printf ("Digite o numero do cadastro: ");
-                scanf ("%d", &j);
-                j--;
 
-                if (j<i){
+                j=busca_cadastros(nome, telefone, email, i);
+                if (j!=-1){
+                    listar_cadastros(nome, telefone, email, j, j+1);
+                }else{
+                    printf ("Nome ou telefone invalido!\n");
+                    system ("pause");
+                }
+
+                break;
+
+            case 4:
+                j=busca_cadastros(nome, telefone, email, i);
+
+                if (j!=-1){
                     system ("cls");
                     
                     free(nome[j]);
@@ -116,13 +149,13 @@ int main (){
                     free(email[j]);
                     email[j]=cadastra_email();
                 }else{
-                    printf ("Numero do cadastro invalido!\n");
+                    printf ("Nome ou telefone invalido!\n");
                     system ("pause");
                 }
 
                 break;
             
-            case 4:
+            case 5:
                 tam*=2;
 
                 nome=realloc(nome, sizeof(char*)*tam);

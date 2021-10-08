@@ -101,6 +101,11 @@ int main (){
     telefone=malloc(sizeof(char*)*tam);
     email=malloc(sizeof(char*)*tam);
 
+    if (nome==NULL || telefone==NULL || email==NULL){
+        printf ("Erro ao alocar memoria!\n");
+        return -1;
+    }
+
     do{ //menu
         system ("cls");
         printf ("(Espacos livre na agenda: %d, Espacos usado na agenda: %d)\n\nMENU\n1) Cadastra Contato\n2) Listar Contatos\n3) Buscar Contato\n4) Editar Contatos\n5) Dobrar espaco da agenda\n0) Sair\nOpcao: ",tam, i);
@@ -161,6 +166,12 @@ int main (){
                 nome=realloc(nome, sizeof(char*)*tam);
                 telefone=realloc(telefone, sizeof(long int*)*tam);
                 email=realloc(email, sizeof(char*)*tam);
+
+                if (nome==NULL || telefone==NULL || email==NULL){
+                    printf ("Erro ao alocar memoria!\n");
+                    return -1;
+                }
+                
                 break;
 
         }

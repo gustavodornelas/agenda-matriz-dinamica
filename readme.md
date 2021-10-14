@@ -9,3 +9,7 @@
 (Obs.: utilize um tamanho inicial pequeno para testar a funcionalidade)
 
 ### d) Criar função que pesquise pelo nome ou pelo telefone do usuário.
+
+### e) Alterar todas as matrizes para uma única Struct
+
+ 

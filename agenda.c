@@ -6,74 +6,71 @@ typedef struct contato{
     char* nome;
     char* telefone;
     char* email;
-}Contato;
+}CONTATO;
 
 typedef struct agenda{
-    Contato* contatos;
-    int tam;
-}Agenda;
+    CONTATO* contatos;
+    int tam, cad; //tamanho e cadastros
+}AGENDA;
 
-char* cadastra_nome (){ //cadastrar nome na agenda
+char bufferNome[100], bufferTelefone[100], bufferEmail[100]; //buffer
 
-    char tmp_nome[100]; //buffer
-    char* nome;
+int cadastraContato (AGENDA* a, int j){
 
+    int i;
+
+    if (j==-1){ //verifica se é um novo cadastro ou um cadastro a ser editado
+        i = a->cad; 
+        a->cad++; 
+    }else{
+        i=j;
+
+        //limpar contato para cadastrar um novo contato no local
+        free (a->contatos[i].nome);
+        free (a->contatos[i].telefone);
+        free (a->contatos[i].telefone);
+    }
     system ("cls");
 
+    //Recebe Nome
     printf ("Digite o nome do contato: ");
-    scanf (" %[^\n]", tmp_nome);
-
-    nome=malloc(sizeof(char) * strlen(tmp_nome)+1); //alocar espaço de acordo com o tamanho do nome lido
-
-    strcpy(nome, tmp_nome); //copiar buffer para o espaço na memoria
-
-    return nome; //retornar a posição na memoria
-}
-
-char* cadastra_telefone (){
-
-    char tmp_tel[15]; //buffer
-    char *tel;
+    scanf (" %[^\n]", bufferNome);  //lê buffer de nome
     
+    //Recebe Telefone
     printf ("Digite o telefone do contato: ");
-    scanf ("  %s", tmp_tel); //lê um telefone
+    scanf (" %[^\n]", bufferTelefone); //lê buffer de telefone
 
-    tel=malloc(sizeof(char) * strlen(tmp_tel)+1); //aloca memoria de acordo com o telefone
-
-    strcpy(tel, tmp_tel); //copia valor para ponteiro
-
-    return tel;
-}
-
-char* cadastra_email (){
-
-    char tmp_email[100]; //buffer
-    char* email;
-
+    //Recebe E-mail
     printf ("Digite o email do contato: ");
-    scanf (" %s", tmp_email); //ler buffer de email
-        
-    if (strlen(tmp_email)==0){ //caso o buffer fique em branco
-        email=malloc(sizeof(char));
-        strcpy(email,'\0');
-    }else{ //caso o usuario cadastre um email
-        email=malloc(sizeof(char) * strlen(tmp_email)+1);
-        strcpy(email, tmp_email);
+    scanf (" %[^\n]", bufferEmail); //ler buffer de email
+    
+    //Alocando memoria para armazenar os valores
+    a->contatos[i].nome = malloc(sizeof(char) * strlen(bufferNome)+1);
+    a->contatos[i].telefone = malloc(sizeof(char) * strlen(bufferTelefone)+1);
+    a->contatos[i].email = malloc(sizeof(char) * strlen(bufferEmail)+1);
+
+    if (a->contatos[i].nome==NULL || a->contatos[i].telefone==NULL || a->contatos[i].email==NULL){
+        printf ("Erro ao alocar memoria!\n");
+        return -1;
     }
 
-    return email;
+    //copiando valores para a struct
+    strcpy(a->contatos[i].nome, bufferNome);
+    strcpy(a->contatos[i].telefone, bufferTelefone);
+    strcpy(a->contatos[i].email, bufferEmail);
+
+    return 0;
 }
 
-int busca_cadastros(Agenda* a, int c){
+int busca_cadastros(AGENDA* a){
 
     char busca[100];
 
     system ("cls");
-
     printf ("Digite o nome ou telefone do contato desejado: ");
     scanf (" %s", busca);
 
-    for (int i=0; i<c; i++){
+    for (int i=0; i<a->cad; i++){
 
         if (strcmp(busca, a->contatos[i].nome)==0 || strcmp(busca, a->contatos[i].telefone)==0){
             return i;
@@ -83,7 +80,7 @@ int busca_cadastros(Agenda* a, int c){
     return -1;
 }
 
-void listar_cadastros (Agenda* a,int t, int c){
+void listar_cadastros (AGENDA* a,int t, int c){
 
     system ("cls");
 
@@ -94,25 +91,24 @@ void listar_cadastros (Agenda* a,int t, int c){
     system ("Pause");
 }
 
-void free_contatos(Agenda* a, int tam){ //função para limpar memoria das matrizes
+void free_contatos(AGENDA* a, int tam){ //função para limpar memoria da Struct
 
     for (int i=0; i<tam; i++){
         free (a->contatos[i].nome);
         free (a->contatos[i].telefone);
         free (a->contatos[i].telefone);
     }
-
 }
 
 int main (){
 
-    Agenda a; //Struct
-    int op, i=0, j; //variaveis de controle
+    AGENDA a; //Struct
+    int op, j; //variaveis de controle
 
     a.tam=100;
 
     //alocação inicial
-    a.contatos=malloc(sizeof(Contato*)*a.tam);
+    a.contatos=malloc(sizeof(CONTATO*)*a.tam);
 
     if (a.contatos==NULL){
         printf ("Erro ao alocar memoria!\n");
@@ -121,17 +117,16 @@ int main (){
 
     do{ //menu
         system ("cls");
-        printf ("(Espacos livre na agenda: %d, Espacos usado na agenda: %d)\n\nMENU\n1) Cadastra Contato\n2) Listar Contatos\n3) Buscar Contato\n4) Editar Contatos\n5) Dobrar espaco da agenda\n0) Sair\nOpcao: ",a.tam, i);
+        printf ("(Espacos livre na agenda: %d, Espacos usado na agenda: %d)\n\nMENU\n1) Cadastra Contato\n2) Listar Contatos\n3) Buscar Contato\n4) Editar Contatos\n5) Dobrar espaco da agenda\n0) Sair\nOpcao: ",a.tam, a.cad);
         scanf ("%d", &op);
 
         switch (op){
-            case 1:
-            if (i<a.tam){  //cadastra valores na struct
+            case 1: //Cadastra Contato
+            if (a.cad<a.tam){  
 
-                a.contatos[i].nome=cadastra_nome();
-                a.contatos[i].telefone=cadastra_telefone();
-                a.contatos[i].email=cadastra_email();  
-                i++;
+                if (cadastraContato(&a, -1)==-1){
+                    return -1;
+                };
 
             }else{
                 printf ("Limite de agenda atingido!\n");
@@ -139,55 +134,44 @@ int main (){
             }
             break;
 
-            case 2:
-                listar_cadastros(&a, 0, i);
+            case 2: //Listar Contatos
+                listar_cadastros(&a, 0, a.cad);
                 break;
 
-            case 3:
+            case 3: //Buscar Contato
 
-                j=busca_cadastros(&a, i);
-                if (j!=-1){
+                j=busca_cadastros(&a);
+                if (j != -1){
                     listar_cadastros(&a, j, j+1);
                 }else{
                     printf ("Nome ou telefone invalido!\n");
                     system ("pause");
                 }
-
                 break;
 
-            case 4:
-                j=busca_cadastros(&a, i);
+            case 4: //Editar Contatos
+                j=busca_cadastros(&a);
 
                 if (j!=-1){
-                    system ("cls");
-                    
-                    free(a.contatos[j].nome);
-                    a.contatos[j].nome=cadastra_nome();
+                    if (cadastraContato(&a, j)==-1){
+                        return -1;
+                    }
 
-                    free(a.contatos[j].telefone);
-                    a.contatos[j].telefone=cadastra_telefone();
-
-                    free(a.contatos[j].email);
-                    a.contatos[j].email=cadastra_email();
                 }else{
                     printf ("Nome ou telefone invalido!\n");
                     system ("pause");
                 }
-
                 break;
             
-            case 5:
+            case 5: //Dobrar espaco da agenda
                 a.tam*=2;
-
                 a.contatos=realloc(a.contatos, sizeof(char*)*a.tam);
                 
                 if (a.contatos==NULL){
                     printf ("Erro ao alocar memoria!\n");
                     return -1;
                 }
-                
                 break;
-
         }
 
     }while (op!=0);
@@ -195,6 +179,5 @@ int main (){
     //limpar memoria
     free_contatos(&a, a.tam);
     free(a.contatos);
-
     return 0;
 }

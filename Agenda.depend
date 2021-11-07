@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1636321367 source:c:\users\gusta\onedrive\faculdade\2° periodo\estrutura de dados\agenda-matriz-dinamica\agenda\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<locale.h>
+	"TAD-agenda.h"
+
+1636316995 c:\users\gusta\onedrive\faculdade\2° periodo\estrutura de dados\agenda-matriz-dinamica\agenda\tad-agenda.h
+
+1636318324 source:c:\users\gusta\onedrive\faculdade\2° periodo\estrutura de dados\agenda-matriz-dinamica\agenda\tad-agenda.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"TAD-agenda.h"
+
+1636321367 source:c:\users\gusta\onedrive\faculdade\2° periodo\estrutura de dados\agenda-matriz-dinamica\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<locale.h>
+	"TAD-agenda.h"
+
+1636316995 c:\users\gusta\onedrive\faculdade\2° periodo\estrutura de dados\agenda-matriz-dinamica\tad-agenda.h
+
+1636321505 source:c:\users\gusta\onedrive\faculdade\2° periodo\estrutura de dados\agenda-matriz-dinamica\tad-agenda.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"TAD-agenda.h"
+

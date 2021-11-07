@@ -40,6 +40,7 @@ CONTATO* cadastraContato (CONTATO* a){
 
     system ("cls");
 
+
     //Recebe Nome
     printf ("Digite o nome do contato: ");
     scanf (" %[^\n]", bufferNome);  //lê buffer de nome
